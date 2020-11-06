@@ -1,0 +1,11 @@
+{
+    "name": "mod_name",
+    "version": "0.0.1",
+    "title": "mod_title",
+    "author": "mod_author",
+    "description": "mod_desc",
+    "factorio_version": "1.0",
+    "dependencies": [
+        "base >= 1.0.0"
+    ]
+}
