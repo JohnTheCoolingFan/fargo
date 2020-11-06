@@ -38,7 +38,6 @@ fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str)
         .replace("mod_author", "TODO")
         .replace("mod_desc", &mod_name);
 
-    // TODO: date
     let changelog_content = changelog_template
         .replace("blank_date", &format!("{}", current_time.format("%d.%m.%Y")));
 
