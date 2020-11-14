@@ -6,6 +6,7 @@ use chrono::{DateTime, Utc};
 use serde_json::{from_reader, Value};
 use walkdir::{DirEntry, WalkDir};
 use zip::write::{ZipWriter, FileOptions};
+use dirs::home_dir;
 
 fn main() {
     // Include all new mod files
@@ -16,8 +17,8 @@ fn main() {
 
     match args.next().unwrap().as_str() {
         "new" => new_mod(args.next().unwrap(), info_json_template, changelog_template),
-        "build" => build_mod(),
-        "run" => println!("[TODO] Build mod and run a game with it"),
+        "build" => build_mod(PathBuf::from("build")),
+        "run" => run_mod(),
         _ => println!("[TODO] No action specified")
     }
 }
@@ -61,7 +62,7 @@ fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str)
 }
 
 // Build mod. Repurposed from rfmp
-fn build_mod() {
+fn build_mod(mut zip_file_path: PathBuf) {
     // Open info.json and parse it
     let info_file = File::open("info.json").expect("Error opening info.json");
     let info: Value = from_reader(info_file).expect("Error parsing info.json");
@@ -70,7 +71,7 @@ fn build_mod() {
     let mod_name = info["name"].as_str().unwrap();
     let mod_version = info["version"].as_str().unwrap();
     
-    let mut zip_file_path = PathBuf::from(".build");
+    //let mut zip_file_path = PathBuf::from(".build");
     if !zip_file_path.exists() {
         create_dir(&zip_file_path).unwrap();
     }
@@ -133,4 +134,10 @@ fn is_hidden(entry: &DirEntry, zip_file_name: &String) -> bool {
     entry_file_name == zip_file_name ||
         (entry_file_name != "." && entry_file_name.starts_with(".")) ||
         entry_file_name == "build"
+}
+
+// Build the mod into the mods folder and run the game
+fn run_mod() {
+    let mod_path = home_dir().unwrap().join(PathBuf::from(".factoio/mods"));
+    build_mod(mod_path);
 }
