@@ -59,6 +59,7 @@ fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str)
         .expect("Failed to write control.lua");
 
     println!("Succesfully created project {}", mod_name);
+    println!("In the future fargo will also create a git repository with proper .gitignore. For now, you can do it by hand.")
 }
 
 // Build mod. Repurposed from rfmp
