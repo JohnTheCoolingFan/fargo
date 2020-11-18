@@ -7,6 +7,7 @@ use serde_json::{from_reader, Value};
 use walkdir::{DirEntry, WalkDir};
 use zip::write::{ZipWriter, FileOptions};
 use dirs::home_dir;
+use open;
 
 fn main() {
     // Include all new mod files
@@ -139,6 +140,8 @@ fn is_hidden(entry: &DirEntry, zip_file_name: &String) -> bool {
 
 // Build the mod into the mods folder and run the game
 fn run_mod() {
-    let mod_path = home_dir().unwrap().join(PathBuf::from(".factoio/mods"));
+    let mod_path = home_dir().unwrap().join(PathBuf::from(".factorio/mods"));
     build_mod(mod_path);
+    // TODO: config game launch
+    open::that("steam://run/427520").unwrap();
 }
