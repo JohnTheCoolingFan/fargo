@@ -7,6 +7,7 @@ use serde_json::{from_reader, Value};
 use walkdir::{DirEntry, WalkDir};
 use zip::write::{ZipWriter, FileOptions};
 use dirs::home_dir;
+use git2::Repository;
 use open;
 
 /* TODO
@@ -27,11 +28,12 @@ fn main() {
     // Include all new mod files
     let info_json_template = include_str!("new_mod_example/info.json");
     let changelog_template = include_str!("new_mod_example/changelog.txt");
+    let gitignore_content  = include_str!("new_mod_example/.gitignore");
 
     let mut args = env::args().skip(1);
 
     match args.next().unwrap().as_str() {
-        "new" => new_mod(args.next().unwrap(), info_json_template, changelog_template),
+        "new" => new_mod(args.next().unwrap(), info_json_template, changelog_template, gitignore_content),
         "build" => build_mod(PathBuf::from("build")),
         "run" => run_mod(),
         _ => println!("[TODO] No action specified")
@@ -39,7 +41,7 @@ fn main() {
 }
 
 // Create new mod project
-fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str) {
+fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str, gitignore_content: &str) {
     let mod_path = Path::new(&mod_name);    
     
     let current_time: DateTime<Utc> = Utc::now();
@@ -73,8 +75,15 @@ fn new_mod(mod_name: String, info_json_template: &str, changelog_template: &str)
     control_lua_file.write_all("-- Here goes all runtime game scripts. For more info, consult https://lua-api.factorio.com".as_bytes())
         .expect("Failed to write control.lua");
 
+    Repository::init(&mod_path)
+        .expect("Failed to create git repository");
+
+    let mut gitignore_file = File::create(mod_path.join(".gitignore"))
+        .expect("Failed to create gitignore file");
+    gitignore_file.write_all(gitignore_content.as_bytes())
+        .expect("Failed to write gitignore");
+
     println!("Succesfully created project {}", mod_name);
-    println!("In the future fargo will also create a git repository with proper .gitignore. For now, you can do it by hand.")
 }
 
 // Build mod. Repurposed from rfmp
