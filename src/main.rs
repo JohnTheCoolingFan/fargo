@@ -9,6 +9,20 @@ use zip::write::{ZipWriter, FileOptions};
 use dirs::home_dir;
 use open;
 
+/* TODO
+ * More functionality for 'new' sub-command and more help for newbies
+ * Config file
+ *   Config some behavior, including how to launch the game, factorio credentials (for downloading
+ *   mods and uploading)
+ * Commands for manipulating current mod-list, mod dependencies, adding simple prototypes..
+ *   mod-list and dependencies are easy, simple json, but adding prototypes is gonna be hard and
+ *   not top priority. Adding prototypes requires using lua
+ * Tests (with settings and mod-list)
+ * Downloading and uploading mods
+ *   Yeah, this may look like it's half mod manager and half mod development project management
+ *   tool.
+ */
+
 fn main() {
     // Include all new mod files
     let info_json_template = include_str!("new_mod_example/info.json");
