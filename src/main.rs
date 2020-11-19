@@ -6,6 +6,7 @@ use chrono::{DateTime, Utc};
 use serde_json::{from_reader, Value};
 use walkdir::{DirEntry, WalkDir};
 use zip::write::{ZipWriter, FileOptions};
+use zip::CompressionMethod;
 use dirs::home_dir;
 use git2::Repository;
 use open;
@@ -124,7 +125,8 @@ fn build_mod(mut zip_file_path: PathBuf) {
 
     // Archive options. Deflated is best combination of speed and compression (for zip)
     // It would be cool if Factorio allowed other compression formats, like zstd
-    let zip_options = FileOptions::default();
+    // zip-rs doesn't seem to be able to compress with deflated multithreaded, unlike 7zip
+    let zip_options = FileOptions::default().compression_method(CompressionMethod::Deflated);
 
     // Create writer
     let mut zipwriter = ZipWriter::new(zip_file);  
