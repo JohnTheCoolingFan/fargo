@@ -13,6 +13,7 @@ use open;
 
 /* TODO
  * More functionality for 'new' sub-command and more help for newbies
+ * Select factorio version
  * Config file
  *   Config some behavior, including how to launch the game, factorio credentials (for downloading
  *   mods and uploading)
